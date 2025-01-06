@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.mapper.UmsNoticeMapper">
+
+    <resultMap type="UmsNotice" id="UmsNoticeResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createtime" column="createtime"/>
+        <result property="createPerson" column="create_person"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectUmsNoticeVo">
+        select id, title, content, createtime, create_person, del_flag  from ums_notice
+    </sql>
+
+    <select id="selectByEntity" parameterType="UmsNotice" resultMap="UmsNoticeResult">
+        <include refid="selectUmsNoticeVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+            <if test="createPerson != null  and createPerson != ''"> and create_person = #{createPerson}</if>
+        </where>
+    </select>
+
+    <update id="updateDelFlagByIds">
+        update ums_notice set del_flag=1
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </update>
+</mapper>

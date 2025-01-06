@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.mapper.UmsPolicyMapper">
+    
+    <resultMap type="UmsPolicy" id="UmsPolicyResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createtime" column="createtime"/>
+    </resultMap>
+
+    <sql id="selectUmsPolicyVo">
+        select id, title, content, createtime  from ums_policy
+    </sql>
+
+    <select id="selectByEntity" parameterType="UmsPolicy" resultMap="UmsPolicyResult">
+        <include refid="selectUmsPolicyVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+
+    <update id="updateDelFlagByIds">
+        update ums_policy set del_flag=1
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </update>
+</mapper>
